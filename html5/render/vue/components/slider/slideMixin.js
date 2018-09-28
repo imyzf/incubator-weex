@@ -38,6 +38,15 @@ export default {
   updated () {
     const children = this.$children
     const len = children && children.length
+    const frameCount = this.frameCount
+    if (frameCount !== this._prevFrameCount) {
+      const inner = this.$refs.inner
+      if (inner) {
+        inner.style.webkitTransform = 'translate3d(' + (0) + 'px, 0, 0)'
+        inner.style.mozTransform = 'translate3d(' + (0) + 'px, 0, 0)'
+        inner.style.transform = 'translate3d(' + (0) + 'px, 0, 0)'
+      }
+    }
     if (children && len > 0) {
       for (let i = 0; i < len; i++) {
         const vm = children[i]
@@ -272,12 +281,19 @@ export default {
       // e.g. currentIndex 0 -> 1: should prepare 4 slides: -1, 0, 1, 2
       // if not, translate a node to here, or just clone it.
       const step = this._step
+      const prevCount = this._prevFrameCount
+      const curCount = this.frameCount
+      // frameCount updated in runtime, should init again.
+      if (prevCount !== curCount) {
+        this._prevFrameCount = curCount
+        this._inited = false
+      }
       if (!this._inited) {
         this._initNodes()
         this._inited = true
         this._showNodes = {}
       }
-      if (this.frameCount <= 1) {
+      if (curCount <= 1) {
         this._showStartIdx = this._showEndIdx = 0
         const node = this._cells[0].elm
         node.style.opacity = 1

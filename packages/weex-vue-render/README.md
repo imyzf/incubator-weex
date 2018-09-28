@@ -206,6 +206,10 @@ vue: {
 
 * fix unit wx, which is a straight px value not to adapt to screens.
 
+#### 0.12.27
+
+* fix slider's frame count changing in runtime.
+
 ## component -> dom map
 
 | component | dom element | children | note |
